@@ -48,7 +48,7 @@ public class ArrayStack<E> implements Stack<E>
   private int size=0;
   public ArrayStack()
   {
-  E data = new E[CAPACITY];
+    data = (E[])new Object[CAPACITY];
   }  // constructs stack with default capacity
 
   /**
@@ -57,7 +57,8 @@ public class ArrayStack<E> implements Stack<E>
    */
   @SuppressWarnings({"unchecked"})
   public ArrayStack(int capacity) {
-    E data = new E[capacity];        // constructs stack with given capacity
+    CAPACITY=capacity;
+    data = (E[])new Object[CAPACITY];        // constructs stack with given capacity
   }
 
   /**
@@ -66,7 +67,7 @@ public class ArrayStack<E> implements Stack<E>
    */
   @Override
   public int size() {
-    return size;
+    return t+1;
   }
 
   /**
@@ -75,7 +76,7 @@ public class ArrayStack<E> implements Stack<E>
    */
   @Override
   public boolean isEmpty() {
-  return size==0;
+  return t==-1;
   }
 
   /**
@@ -85,8 +86,11 @@ public class ArrayStack<E> implements Stack<E>
    */
   @Override
   public void push(E e) throws IllegalStateException {
-    data[size++]=e;
-    t++;
+    if(t+1 < CAPACITY)
+        {
+            data[++t] = e;
+        }
+        else throw new IllegalStateException();
   }
 
   /**
@@ -95,7 +99,11 @@ public class ArrayStack<E> implements Stack<E>
    */
   @Override
   public E top() {
-      return data[t];
+      if(t>-1)
+      {
+        return data[t];
+      }
+      return NULL;
   }
 
   /**
@@ -104,10 +112,9 @@ public class ArrayStack<E> implements Stack<E>
    */
   @Override
   public E pop() {
-    E e=(E) data[--size];
-    data[size]=null;
-    t--;
-    return e;
+    if(t > -1)
+            return data[t--];
+        return null;
   }
 
   /**
@@ -117,16 +124,14 @@ public class ArrayStack<E> implements Stack<E>
    * @return textual representation of the stack
    */
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-         sb.append('[');
-         for(int i = 0; i < size ;i++) {
-             sb.append(data[i].toString());
-             if(i < size-1){
-                 sb.append(",");
-             }
-         }
-         sb.append(']');
-         return sb.toString();
+    StringBuilder stringBuilder = new StringBuilder("");
+        for(int i=t ; i>-1 ; i--)
+        {
+            stringBuilder.append(data[i].toString());
+            if(i!=0)
+                stringBuilder.append(" - ");
+        }
+        return stringBuilder.toString();
   }
 
   /** Demonstrates sample usage of a stack. */
